@@ -29,7 +29,7 @@ let storage = multer.diskStorage({
     },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname)
-        if(allowedFileNameExtensions.includes(!(ext)) {
+        if(allowedFileNameExtensions.includes(!ext)) {
             return cb(res.status(400).end('only mp4 is allowed'), false);
         }
         cb(null, true);
@@ -38,21 +38,27 @@ let storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single("file");
 
-router.post('/upload', (req, res) => {
+router.post('/uploadfiles', (req, res) => {
     // upload video to server
-    upload((req, res, err) => {
+    upload(req, res, (err) => {
         if (err) {
-            return res.json({
-                success: false,
+            return res.status(400).json({
                 err
             })
         }
-        return res.json({
-            success: true,
+        return res.status(200).json({
             url: res.req.file.path,
             fileName: res.req.file.filename
         })
     })
+})
+
+router.get('/hello', (req, res) => {
+    console.log("received hello!");
+    return res.json({
+        success: true,
+        message: "hello!"
+    });
 })
 
 module.exports = router;

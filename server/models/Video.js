@@ -9,7 +9,7 @@ const videoSchema = mongoose.Schema({
         type:String,
         maxlength:1000
     },
-    private : {
+    privacy : {
         type:Number,
         default: 0,
     },
