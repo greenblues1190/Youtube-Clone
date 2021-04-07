@@ -23,6 +23,9 @@ function VideoUploadPage() {
   const [Description, setDescription] = useState("");
   const [Category, setCategory] = useState(categoryOptions[0]);
   const [Privacy, setPrivacy] = useState(0);
+  const [FilePath, setFilePath] = useState("");
+  const [Duration, setDuration] = useState("");
+  const [ThumbnailPath, setThumbnailPath] = useState("");
 
   const onTitleChange = (e) => {
     setVideoTitle(e.currentTarget.value);
@@ -45,24 +48,38 @@ function VideoUploadPage() {
     const config = {
       header: { "content-type": "multipart/form-data" },
     };
-    console.log(files);
     formData.append("file", files[0]);
 
     // Axios.get(`${VIDEO_SERVER}/hello`).then((res) => {
     //   alert(res.data.message);
     // })
-    
+
     Axios.post(`${VIDEO_SERVER}/uploadfiles`, formData, config)
-    .then((response) => {
-      if (response.status === 200) {
-        console.log(response);
-      } else {
-        alert("failed to save the video in server");
-      }
-    })
-    .catch((error) => {
-      alert("error occured!");
-    })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          let variable = {
+            url: response.data.url,
+            fileName: response.data.fileName,
+          };
+
+          setFilePath(response.data.url);
+
+          Axios.post(`${VIDEO_SERVER}/thumbnail`, variable).then((response) => {
+            if (response.data.success) {
+              setDuration(response.data.fileDuration);
+              setThumbnailPath(response.data.url);
+            } else {
+              alert("failed to create thumbnail");
+            }
+          });
+        } else {
+          alert("failed to save the video in server");
+        }
+      })
+      .catch((error) => {
+        alert("error occured!");
+      });
   };
 
   return (
@@ -129,6 +146,15 @@ function VideoUploadPage() {
                     </div>
                   )}
                 </Dropzone>
+                {/* Thumbnail */}
+                {ThumbnailPath && (
+                  <div>
+                    <img
+                      src={`http://localhost:5000/${ThumbnailPath}`}
+                      alt="thumbnail"
+                    />
+                  </div>
+                )}
               </div>
               <div>
                 <label
