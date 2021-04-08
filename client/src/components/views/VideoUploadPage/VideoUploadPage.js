@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import Axios from "axios";
 import { VIDEO_SERVER } from "../../Config";
+import { useSelector } from "react-redux";
 
 const privacyOptions = [
   { value: 0, label: "비공개" },
@@ -9,19 +10,20 @@ const privacyOptions = [
 ];
 
 const categoryOptions = [
-  { value: 0, label: "멀티미디어" },
-  { value: 1, label: "음악" },
-  { value: 2, label: "미술" },
-  { value: 3, label: "세미나" },
+  { value: "멀티미디어", label: "멀티미디어" },
+  { value: "음악", label: "음악" },
+  { value: "미술", label: "미술" },
+  { value: "세미나", label: "세미나" },
 ];
 
 // max file size (MB)
 const maxFileSize = 100;
 
-function VideoUploadPage() {
+function VideoUploadPage(props) {
+  const user = useSelector((state) => state.user);
   const [VideoTitle, setVideoTitle] = useState("");
   const [Description, setDescription] = useState("");
-  const [Category, setCategory] = useState(categoryOptions[0]);
+  const [Category, setCategory] = useState(categoryOptions[0].value);
   const [Privacy, setPrivacy] = useState(0);
   const [FilePath, setFilePath] = useState("");
   const [Duration, setDuration] = useState("");
@@ -82,6 +84,36 @@ function VideoUploadPage() {
       });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const variables = {
+      writer: user.userData._id,
+      title: VideoTitle,
+      description: Description,
+      privacy: Privacy,
+      filePath: FilePath,
+      category: Category,
+      duration: Duration,
+      thumbnail: ThumbnailPath,
+    };
+
+    console.log(variables);
+
+    Axios.post(`${VIDEO_SERVER}/uploadVideo`, variables)
+      .then((response) => {
+        if (response.data.success) {
+          alert("video uploaded!");
+          props.history.push("/");
+        } else {
+          alert("Failed to upload video");
+        }
+      })
+      .catch((error) => {
+        alert("error occured!");
+      });
+  };
+
   return (
     <div className="max-w-sm mt-10">
       <div className="">
@@ -96,7 +128,7 @@ function VideoUploadPage() {
         </div>
       </div>
       <div className="mt-5">
-        <form action="#" method="POST" onSubmit>
+        <form action="#" method="POST" onSubmit={onSubmit}>
           <div className="shadow sm:rounded-md sm:overflow-hidden">
             <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
               <div>
@@ -237,7 +269,7 @@ function VideoUploadPage() {
             <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
               <button
                 type="submit"
-                onSubmit
+                onSubmit={onSubmit}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Save

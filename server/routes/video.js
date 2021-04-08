@@ -64,8 +64,8 @@ router.post("/thumbnail", (req, res) => {
 
   // 비디오 정보 가져오기
   ffmpeg.ffprobe(req.body.url, function (err, metadata) {
-    console.dir(metadata); // all metadata
-    console.log(metadata.format.duration);
+    // console.dir(metadata); // all metadata
+    // console.log(metadata.format.duration);
     fileDuration = metadata.format.duration;
   });
 
@@ -73,12 +73,12 @@ router.post("/thumbnail", (req, res) => {
 
   ffmpeg(req.body.url)
     .on("filenames", function (filenames) {
-      console.log("Will generate " + filenames.join(", "));
-      console.log(filenames);
+      // console.log("Will generate " + filenames.join(", "));
+      // console.log(filenames);
       filePath = "uploads/thumbnails/" + filenames[0];
     })
     .on("end", function () {
-      console.log("Screenshot taken");
+      // console.log("Screenshot taken");
       return res.json({
         success: true,
         url: filePath,
@@ -99,11 +99,15 @@ router.post("/thumbnail", (req, res) => {
     });
 });
 
-router.get("/hello", (req, res) => {
-  console.log("received hello!");
-  return res.json({
-    success: true,
-    message: "hello!",
+router.post("/uploadVideo", (req, res) => {
+  // upload video metadata
+  const newVideo = new Video(req.body);
+
+  newVideo.save((err, doc) => {
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    res.status(200).json({ success: true });
   });
 });
 
