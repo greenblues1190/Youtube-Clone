@@ -71,3 +71,8 @@ yarn-error.log
 /build
 dev.js
 .vscode
+
+# uploads files
+uploads/*
+uploads/*/*
+!uploads/*/
