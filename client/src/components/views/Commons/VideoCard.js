@@ -10,7 +10,7 @@ function VideoCard(props) {
   return (
     <div className="justify-between m-2">
       <a href={`/video/post/${props.video._id}`} >
-        <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-md">
+        <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-lg">
           <div className="relative">
             <img
               className="object-cover h-auto w-full rounded rounded-b-none"
@@ -31,9 +31,9 @@ function VideoCard(props) {
                     stroke="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
@@ -81,9 +81,9 @@ function VideoCard(props) {
                     stroke="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                     />
                   </svg>

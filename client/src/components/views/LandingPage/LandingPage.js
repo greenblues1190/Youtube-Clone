@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import moment from 'moment';
 import { VIDEO_SERVER } from "../../Config";
-import { Card, Avatar } from "antd"
 import VideoCard from "../Commons/VideoCard";
-import { generateShowHourMinuteSecond } from 'antd/lib/time-picker';
-const { Meta } = Card;
 
 function LandingPage() {
     const [Video, setVideo] = useState([]);
