@@ -12,12 +12,14 @@ function VideoCard(props) {
       <a href={`/video/${props.video._id}`} >
         <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-lg">
           <div className="relative">
-            <img
-              className="object-cover h-auto w-full rounded rounded-b-none"
-              src={`http://localhost:5000/${props.video.thumbnail}`}
-              alt="thumbnail"
-              loading="lazy"
-            />
+            <div className="aspect-w-16 aspect-h-9">
+              <img
+                className="object-cover w-full rounded rounded-b-none"
+                src={`http://localhost:5000/${props.video.thumbnail}`}
+                alt="thumbnail"
+                loading="lazy"
+              />
+            </div>
             <div className="absolute bottom-0 right-0 m-2">
               <div className="flex justify-between">
                 <span

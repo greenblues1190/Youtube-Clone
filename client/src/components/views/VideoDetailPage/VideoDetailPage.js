@@ -26,8 +26,9 @@ function VideoDetailPage(props) {
           {/* Video Section */}
           <div className="flex flex-col col-start-1 md:col-span-3 col-span-4">
             {/* Video Player */}
-            <video className="w-full" src={`http://localhost:5000/${VideoDetail.filePath}`} controls />
-
+            <div className="aspect-w-16 aspect-h-9">
+              <video className="w-full object-contain bg-black" src={`http://localhost:5000/${VideoDetail.filePath}`} controls />
+            </div>
             {/* Video Metadata */}
             <div className="border-b">
               <h1
