@@ -3,8 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
 const { Video } = require("../models/Video");
-
-const { auth } = require("../middleware/auth");
+const { Subscriber } = require("../models/Subscriber");
 
 //=================================
 //             Video
@@ -112,7 +111,7 @@ router.post("/uploadVideo", (req, res) => {
 });
 
 router.get("/getVideos", (req, res) => {
-  // get video from DB and send it to the client
+  // get videos from DB and send it to the client
   Video.find()
     .populate('writer')
     .exec((err, videos) => {
@@ -124,11 +123,33 @@ router.get("/getVideos", (req, res) => {
     })
 });
 
+router.post("/getSubscribedVideos", (req, res) => {
+  // get subscribed users with userFrom
+  Subscriber.find({ userFrom: req.body.userFrom })
+    .exec((err, subscriptions) => {
+      if (err) return res.send(err);
+
+      let subscribedUsers = [];
+      subscriptions.map((subscription, index) => {
+        subscribedUsers.push(subscription.userTo);
+      })
+      Video.find({ writer: { $in: subscribedUsers } })
+        .populate('writer')
+        .exec((err, videos) => {
+          if (err) return res.status(400).send(err);
+          res.status(200).json({
+            success: true,
+            videos
+          })
+        })
+    })
+});
+
 router.post("/getVideoDetail", (req, res) => {
   Video.findOne({ "_id": req.body.videoId })
     .populate('writer')
     .exec((err, videoDetail) => {
-      if (err) return res.json({ success: false, err });
+      if (err) return res.send(err);
       return res.status(200).json({
         success: true,
         videoDetail

@@ -59,7 +59,6 @@ function VideoUploadPage(props) {
     Axios.post(`${VIDEO_SERVER}/uploadfiles`, formData, config)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
           let variable = {
             url: response.data.url,
             fileName: response.data.fileName,
@@ -97,8 +96,6 @@ function VideoUploadPage(props) {
       duration: Duration,
       thumbnail: ThumbnailPath,
     };
-
-    console.log(variables);
 
     Axios.post(`${VIDEO_SERVER}/uploadVideo`, variables)
       .then((response) => {

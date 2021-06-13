@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
 import { VIDEO_SERVER } from '../../Config';
-import SideCard from './SideCard';
+import SideCard from './Sections/SideCard';
+import Subscribe from './Sections/Subscribe';
 
 function VideoDetailPage(props) {
   let videoId = props.match.params.videoId;
@@ -13,27 +14,25 @@ function VideoDetailPage(props) {
     Axios.post(`${VIDEO_SERVER}/getVideoDetail`, { videoId: videoId })
       .then(res => {
         if (res.data.success) {
-          console.log(res.data);
           setVideoDetail(res.data.videoDetail);
         } else {
           alert("비디오 정보를 가져오는데 실패했습니다.");
         }
       })
-    
+
     Axios.get(`${VIDEO_SERVER}/getVideos`)
-    .then(res => {
+      .then(res => {
         if (res.data.success) {
-            console.log(res.data);
-            setRelatedVideos(res.data.videos);
+          setRelatedVideos(res.data.videos);
         } else {
-            alert('비디오 가져오기를 실패하였습니다.');
+          alert('비디오 가져오기를 실패하였습니다.');
         }
-    })
+      })
   }, [])
 
   const renderSideCards = RelatedVideos.map((relatedVideo, index) => {
     return (
-      <SideCard 
+      <SideCard
         video={relatedVideo}
       />
     )
@@ -41,8 +40,8 @@ function VideoDetailPage(props) {
 
   if (VideoDetail.writer) {
     return (
-      <div className="w-11/12 flex flex-col justify-center divide-y pb-12">
-        <div class="grid grid-cols-6 gap-4 mt-4">
+      <div className="w-11/12 flex flex-col justify-center divide-y">
+        <div className="grid grid-cols-6 gap-4 mt-4">
           {/* Video Section */}
           <div className="flex flex-col col-start-1 lg:col-span-4 col-span-6">
             {/* Video Player */}
@@ -57,7 +56,7 @@ function VideoDetailPage(props) {
                 {VideoDetail.title}
               </h1>
               <div
-                className="flex items-center space-x-3 w-full my-4"
+                className="flex flex-row items-center space-x-3 w-full my-4"
               >
                 <img
                   className="object-cover w-8 h-8 rounded-full"
@@ -74,6 +73,12 @@ function VideoDetailPage(props) {
                     {VideoDetail.views} views • {moment(VideoDetail.createdAt).format("MMM Do YY")}
                   </p>
                 </div>
+                <div className="w-full flex justify-end">
+                  <Subscribe
+                  userTo={VideoDetail.writer._id}
+                />
+                </div>
+                
               </div>
             </div>
 
