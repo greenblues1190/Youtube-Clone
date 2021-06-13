@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import moment from 'moment';
 import { VIDEO_SERVER } from '../../Config';
+import SideCard from './SideCard';
 
 function VideoDetailPage(props) {
   let videoId = props.match.params.videoId;
   const [VideoDetail, setVideoDetail] = useState([]);
+  const [RelatedVideos, setRelatedVideos] = useState([])
 
   useEffect(() => {
     Axios.post(`${VIDEO_SERVER}/getVideoDetail`, { videoId: videoId })
@@ -17,14 +19,32 @@ function VideoDetailPage(props) {
           alert("비디오 정보를 가져오는데 실패했습니다.");
         }
       })
+    
+    Axios.get(`${VIDEO_SERVER}/getVideos`)
+    .then(res => {
+        if (res.data.success) {
+            console.log(res.data);
+            setRelatedVideos(res.data.videos);
+        } else {
+            alert('비디오 가져오기를 실패하였습니다.');
+        }
+    })
   }, [])
+
+  const renderSideCards = RelatedVideos.map((relatedVideo, index) => {
+    return (
+      <SideCard 
+        video={relatedVideo}
+      />
+    )
+  })
 
   if (VideoDetail.writer) {
     return (
       <div className="w-11/12 flex flex-col justify-center divide-y pb-12">
-        <div class="grid grid-cols-4 gap-4 mt-4">
+        <div class="grid grid-cols-6 gap-4 mt-4">
           {/* Video Section */}
-          <div className="flex flex-col col-start-1 md:col-span-3 col-span-4">
+          <div className="flex flex-col col-start-1 lg:col-span-4 col-span-6">
             {/* Video Player */}
             <div className="aspect-w-16 aspect-h-9">
               <video className="w-full object-contain bg-black" src={`http://localhost:5000/${VideoDetail.filePath}`} controls />
@@ -64,8 +84,8 @@ function VideoDetailPage(props) {
           </div>
 
           {/* Side List Section */}
-          <div className="col-end-5 md:col-span-1 col-span-4">
-            Side List
+          <div className="col-end-7 lg:col-span-2 col-span-6 flex flex-col w-full gap-2">
+            {renderSideCards}
           </div>
         </div>
       </div>

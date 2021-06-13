@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 import moment from 'moment';
 
-function VideoCard(props) {
+function SideCard(props) {
   let duration = moment.duration(Math.floor(props.video.duration), 'seconds');
   let updatedTimeFromNow = moment(props.video.createdAt).fromNow();
 
   return (
-    <div className="justify-between m-2">
+    <div className="">
       <a href={`/video/${props.video._id}`} >
-        <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-lg">
-          <div className="relative">
-            <div className="aspect-w-16 aspect-h-9">
+        <div className="flex flex-row mx-auto">
+        <div className="relative">
+            <div className="aspect-w-16 aspect-h-9 w-44">
               <img
-                className="object-cover w-full rounded rounded-b-none"
+                className="object-cover w-full"
                 src={`http://localhost:5000/${props.video.thumbnail}`}
                 alt="thumbnail"
                 loading="lazy"
@@ -46,26 +46,24 @@ function VideoCard(props) {
               </div>
             </div>
           </div>
-          <div className="py-2 px-4">
+          <div className="flex flex-col items-start gap-2 px-2">
             <h1
-              className="text-lg leading-6 tracking-wide break-all line-clamp-2"
+              className="text-sm font-medium tracking-wide break-all line-clamp-2"
             >
               {props.video.title}
             </h1>
-          </div>
-          <div className="flex flex-row items-end h-full w-full px-4 mt-2">
-            <div className="flex border-t border-gray-100 w-full py-4">
+            <div className="flex flex-row w-full">
               <div
-                className="flex items-center space-x-3 w-full"
+                className="flex space-x-3 w-full"
               >
                 <img
-                  className="object-cover w-8 h-8 rounded-full"
+                  className="object-cover w-6 h-6 rounded-full my-1"
                   src={props.video.writer.image}
                   alt="profile users"
                   loading="lazy"
                 />
                 <div className="flex flex-col">
-                  <p className="text-sm font-semibold tracking-wide">
+                  <p className="text-xs tracking-wide">
                     {props.video.writer.name}
                   </p>
                   <p className="text-xs tracking-wider text-gray-400">
@@ -100,4 +98,4 @@ function VideoCard(props) {
   )
 }
 
-export default VideoCard
+export default SideCard
