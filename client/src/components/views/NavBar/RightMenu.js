@@ -115,11 +115,10 @@ function RightMenu(props) {
                 From: "transform opacity-100 scale-100"
                 To: "transform opacity-0 scale-95" */}
           <div
-            className={`transition ${
-              profileDropdownOpen
+            className={`transition ${profileDropdownOpen
                 ? "ease-out duration-100 transform scale-100 visible"
                 : "transition ease-in duration-75 transform scale-95 invisible"
-            } origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5`}
+              } origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5`}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="user-menu"

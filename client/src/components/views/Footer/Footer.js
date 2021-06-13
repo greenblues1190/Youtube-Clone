@@ -1,15 +1,11 @@
 import React from 'react'
-import {Icon} from 'antd';
 
 function Footer() {
     return (
-        <div style={{
-            height: '80px', display: 'flex',
-            flexDirection: 'column', alignItems: 'center',
-            justifyContent: 'center', fontSize:'1rem'
-        }}>
-           <p> Happy Coding  <Icon type="smile" /></p>
+        <div className="h-full flex flex-col items-center justify-items-center text-base mb-6">
+           <p className="text-gray-400 text-xs"> Youtube Clone, 2021. Jeongmin Woo</p>
         </div>
+
     )
 }
 
