@@ -45,7 +45,7 @@ function LandingPage() {
     })
 
     return (
-        <div className="w-10/12 flex flex-col justify-center divide-y pb-12">
+        <div className="w-11/12 flex flex-col justify-center divide-y pb-12">
             <div className="mt-4">
                 <div className="text-3xl m-2">Recommended</div>
 

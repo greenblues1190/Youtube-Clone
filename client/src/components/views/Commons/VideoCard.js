@@ -2,14 +2,14 @@ import React from 'react';
 import moment from 'moment';
 
 function VideoCard(props) {
-  let minutes = Math.floor(props.video.duration / 60);
-  let seconds = Math.floor(props.video.duration - minutes * 60);
+  let duration = moment.duration(Math.floor(props.video.duration), 'seconds');
   let updatedTimeFromNow = moment(props.video.createdAt).fromNow();
-  let views = props.video.views;
+
+  console.log(duration);
 
   return (
     <div className="justify-between m-2">
-      <a href={`/video/post/${props.video._id}`} >
+      <a href={`/video/${props.video._id}`} >
         <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-lg">
           <div className="relative">
             <img
@@ -18,7 +18,7 @@ function VideoCard(props) {
               alt="thumbnail"
               loading="lazy"
             />
-            <div className="absolute bottom-0 right-0 m-4">
+            <div className="absolute bottom-0 right-0 m-2">
               <div className="flex justify-between">
                 <span
                   className="flex h-min space-x-1 items-center rounded-full text-gray-400 bg-gray-900 bg-opacity-50 py-1 px-2 text-xs font-medium"
@@ -38,7 +38,9 @@ function VideoCard(props) {
                     />
                   </svg>
                   <p className="text-white font-semibold text-xs">
-                    {minutes}:{seconds}
+                    {duration.get("hours") >= 1 ?
+                      <span>{duration.get("hours")}:{duration.get("minutes")}:{duration.get("seconds")}</span> : <span>{duration.get("minutes")}:{duration.get("seconds")}</span>
+                    }
                   </p>
                 </span>
               </div>
@@ -46,7 +48,7 @@ function VideoCard(props) {
           </div>
           <div className="py-2 px-4">
             <h1
-              className="text-l leading-6 tracking-wide break-all line-clamp-2"
+              className="text-lg leading-6 tracking-wide break-all line-clamp-2"
             >
               {props.video.title}
             </h1>
