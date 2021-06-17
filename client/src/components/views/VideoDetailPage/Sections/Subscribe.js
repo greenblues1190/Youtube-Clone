@@ -1,8 +1,10 @@
 import Axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { SUBSCRIBER_SERVER } from '../../../Config'
 
 function Subscribe(props) {
+  const user = useSelector((state) => state.user)
   const [SubscriberNumber, setSubscriberNumber] = useState(0)
   const [IsSubscribed, setIsSubscribed] = useState(false)
   const [IsMyChannel, setIsMyChannel] = useState(true)
@@ -29,7 +31,7 @@ function Subscribe(props) {
 
     // if userTo is userFrom, or not logined, disable the subscribe button
     setIsMyChannel(props.userTo === localStorage.getItem('userId'));
-    setIsLogined(localStorage.getItem("userId") ? true : false);
+    setIsLogined(user.userData.isAuth ? true : false);
   }, [])
 
   const onSubscribe = () => {

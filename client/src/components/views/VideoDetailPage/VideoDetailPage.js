@@ -4,11 +4,13 @@ import moment from 'moment';
 import { VIDEO_SERVER } from '../../Config';
 import SideCard from './Sections/SideCard';
 import Subscribe from './Sections/Subscribe';
+import Avatar from '../Commons/Avatar';
+import CommentSection from './Sections/CommentSection';
 
 function VideoDetailPage(props) {
   let videoId = props.match.params.videoId;
   const [VideoDetail, setVideoDetail] = useState([]);
-  const [RelatedVideos, setRelatedVideos] = useState([])
+  const [RelatedVideos, setRelatedVideos] = useState([]);
 
   useEffect(() => {
     Axios.post(`${VIDEO_SERVER}/getVideoDetail`, { videoId: videoId })
@@ -30,7 +32,7 @@ function VideoDetailPage(props) {
       })
   }, [])
 
-  const renderSideCards = RelatedVideos.map((relatedVideo, index) => {
+  const renderSideCards = RelatedVideos.map(relatedVideo => {
     return (
       <SideCard
         video={relatedVideo}
@@ -58,15 +60,9 @@ function VideoDetailPage(props) {
               <div
                 className="flex flex-row items-center space-x-3 w-full my-4"
               >
-                <img
-                  className="object-cover w-8 h-8 rounded-full"
-                  src={VideoDetail.writer.image}
-                  alt="profile users"
-                  loading="lazy"
-                />
-
-                <div className="flex flex-col">
-                  <p className="text-sm font-semibold tracking-wide">
+                <Avatar imagePath={VideoDetail.writer.image} size="l" />
+                <div className="w-full flex flex-col">
+                  <p className="text-sm font-medium tracking-wide">
                     {VideoDetail.writer.name}
                   </p>
                   <p className="text-xs tracking-wider text-gray-400">
@@ -83,11 +79,11 @@ function VideoDetailPage(props) {
             </div>
 
             <div className="my-4">
-              comment Section
+              <CommentSection videoId={videoId} />
             </div>
 
           </div>
-
+          
           {/* Side List Section */}
           <div className="col-end-7 lg:col-span-2 col-span-6 flex flex-col w-full gap-2">
             {renderSideCards}

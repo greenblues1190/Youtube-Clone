@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Avatar from './Avatar';
 
 function VideoCard(props) {
   let duration = moment.duration(Math.floor(props.video.duration), 'seconds');
@@ -58,12 +59,7 @@ function VideoCard(props) {
               <div
                 className="flex items-center space-x-3 w-full"
               >
-                <img
-                  className="object-cover w-8 h-8 rounded-full"
-                  src={props.video.writer.image}
-                  alt="profile users"
-                  loading="lazy"
-                />
+                <Avatar imagePath={props.video.writer.image} size="m" />
                 <div className="flex flex-col">
                   <p className="text-sm font-semibold tracking-wide">
                     {props.video.writer.name}

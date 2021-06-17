@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment';
+import Avatar from '../../Commons/Avatar';
 
 function SideCard(props) {
   let duration = moment.duration(Math.floor(props.video.duration), 'seconds');
@@ -56,12 +57,7 @@ function SideCard(props) {
               <div
                 className="flex space-x-3 w-full"
               >
-                <img
-                  className="object-cover w-6 h-6 rounded-full my-1"
-                  src={props.video.writer.image}
-                  alt="profile users"
-                  loading="lazy"
-                />
+                <Avatar imagePath={props.video.writer.image} size="s" />
                 <div className="flex flex-col">
                   <p className="text-xs tracking-wide">
                     {props.video.writer.name}

@@ -130,7 +130,7 @@ router.post("/getSubscribedVideos", (req, res) => {
       if (err) return res.send(err);
 
       let subscribedUsers = [];
-      subscriptions.map((subscription, index) => {
+      subscriptions.map(subscription => {
         subscribedUsers.push(subscription.userTo);
       })
       Video.find({ writer: { $in: subscribedUsers } })

@@ -3,6 +3,7 @@ import axios from "axios";
 import { USER_SERVER } from "../../Config";
 import { withRouter, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Avatar from '../Commons/Avatar';
 
 function RightMenu(props) {
   const user = useSelector((state) => state.user);
@@ -100,11 +101,9 @@ function RightMenu(props) {
               onBlur={onBlurProfile}
             >
               <span className="sr-only">Open user menu</span>
-              <img
-                className="h-8 w-8 rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              ></img>
+              {user.userData && user.userData.image &&
+                <Avatar imagePath={user.userData.image} size="m" />
+              }
             </button>
           </div>
           {/* Profile dropdown panel, show/hide based on dropdown state.
@@ -117,8 +116,8 @@ function RightMenu(props) {
                 To: "transform opacity-0 scale-95" */}
           <div
             className={`transition ${profileDropdownOpen
-                ? "ease-out duration-100 transform scale-100 visible"
-                : "transition ease-in duration-75 transform scale-95 invisible"
+              ? "ease-out duration-100 transform scale-100 visible"
+              : "transition ease-in duration-75 transform scale-95 invisible"
               } origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5`}
             role="menu"
             aria-orientation="vertical"

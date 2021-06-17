@@ -17,7 +17,7 @@ function LandingPage() {
             })
     }, [])
 
-    const renderCards = Video.map((video, index) => {
+    const renderCards = Video.map(video => {
         return (
             <VideoCard
                 video={video}
