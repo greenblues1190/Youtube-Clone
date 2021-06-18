@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Axios from 'axios';
 import moment from 'moment';
 import { VIDEO_SERVER } from '../../Config';
@@ -6,8 +7,10 @@ import SideCard from './Sections/SideCard';
 import Subscribe from './Sections/Subscribe';
 import Avatar from '../Commons/Avatar';
 import CommentSection from './Sections/CommentSection';
+import LikeDislikeButton from '../Commons/LikeDislikeButton';
 
 function VideoDetailPage(props) {
+  const user = useSelector(state => state.user);
   let videoId = props.match.params.videoId;
   const [VideoDetail, setVideoDetail] = useState([]);
   const [RelatedVideos, setRelatedVideos] = useState([]);
@@ -69,12 +72,13 @@ function VideoDetailPage(props) {
                     {VideoDetail.views} views • {moment(VideoDetail.createdAt).format("MMM Do YY")}
                   </p>
                 </div>
-                <div className="w-full flex justify-end">
+                <div className="w-full flex flex-row gap-2 justify-end">
+                  <LikeDislikeButton type="video" objectId={videoId} user={user} />
                   <Subscribe
-                  userTo={VideoDetail.writer._id}
-                />
+                    userTo={VideoDetail.writer._id}
+                  />
                 </div>
-                
+
               </div>
             </div>
 
@@ -83,7 +87,7 @@ function VideoDetailPage(props) {
             </div>
 
           </div>
-          
+
           {/* Side List Section */}
           <div className="col-end-7 lg:col-span-2 col-span-6 flex flex-col w-full gap-2">
             {renderSideCards}

@@ -42,20 +42,21 @@ function NavBar() {
               </svg>
             </button>
           </div>
-          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex-shrink-0 flex items-center">
-              <img
-                className="block lg:hidden h-8 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                alt="Workflow"
-              ></img>
-              <Link
-                className="hidden lg:block h-8 w-auto text-xl text-black tracking-widest"
-                to="/"
-              >
-                website
-              </Link>
-            </div>
+          <div className="flex-1 flex items-center justify-center sm:justify-start">
+            <Link
+              to="/"
+            >
+              <div className="flex-shrink-0 flex items-center space-x-2">
+                <img
+                  className="block h-8 w-auto"
+                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                  alt="Workflow"
+                ></img>
+                <p className="hidden lg:block  w-auto text-xl text-black tracking-widest">
+                  Videoshare
+                  </p>
+              </div>
+            </Link>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
                 {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white"  */}
