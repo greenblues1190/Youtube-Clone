@@ -3,20 +3,19 @@ import Axios from 'axios';
 import { VIDEO_SERVER } from "../../Config";
 import VideoCard from "../Commons/VideoCard";
 
-function SubscriptionPage() {
+function SubscriptionPage(props) {
     const [Video, setVideo] = useState([]);
 
     useEffect(() => {
         Axios.post(`${VIDEO_SERVER}/getSubscribedVideos`, { userFrom: localStorage.getItem('userId') })
             .then(res => {
                 if (res.data.success) {
-                    console.log(res.data);
                     setVideo(res.data.videos);
                 } else {
                     alert('구독한 비디오 가져오기를 실패하였습니다.');
                 }
             })
-    }, [])
+    }, [props.user.userData])
 
     const renderCards = Video.map(video => {
         return (

@@ -52,10 +52,6 @@ function VideoUploadPage(props) {
     };
     formData.append("file", files[0]);
 
-    // Axios.get(`${VIDEO_SERVER}/hello`).then((res) => {
-    //   alert(res.data.message);
-    // })
-
     Axios.post(`${VIDEO_SERVER}/uploadfiles`, formData, config)
       .then((response) => {
         if (response.status === 200) {
@@ -136,7 +132,7 @@ function VideoUploadPage(props) {
                   onDrop={onDrop}
                   multiple={false}
                   maxSize={maxFileSize * 1000000} // Maximum file size (in bytes)
-                  // acceptedFiles=".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF"
+                // acceptedFiles=".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF"
                 >
                   {({ getRootProps, getInputProps }) => (
                     <div

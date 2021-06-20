@@ -4,13 +4,21 @@ import { USER_SERVER } from "../../Config";
 import { withRouter, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Avatar from '../Commons/Avatar';
+import moment from 'moment';
 
 function RightMenu(props) {
   const user = useSelector((state) => state.user);
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  const logoutHandler = () => {
+  const renderthings = () => {
+    console.log(`[${moment(Date.now()).format('hh:mm:ss')}] rendered: right menu`);
+    return (
+      <p>right menu here</p>
+    )
+  }
+
+  const handleLogout = () => {
     setProfileDropdownOpen(false);
     axios.get(`${USER_SERVER}/logout`).then((response) => {
       if (response.status === 200) {
@@ -23,7 +31,7 @@ function RightMenu(props) {
   };
 
   const onLinkClick = () => {
-    alert("beep!");
+    // alert("beep!");
     setProfileDropdownOpen(false);
   }
 
@@ -36,16 +44,11 @@ function RightMenu(props) {
     }
   };
 
-  if (user.userData && !user.userData.isAuth) {
-    return (
-      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 tracking-wider">
-        <Link to="/login">Signin</Link>
-        <Link className="ml-6" to="/register">
-          Signup
-        </Link>
-      </div>
-    );
-  } else {
+  // return (
+  //   renderthings()
+  // )
+  if (user.userData && user.userData.isAuth) {
+    renderthings()
     return (
       <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <Link
@@ -101,19 +104,9 @@ function RightMenu(props) {
               onBlur={onBlurProfile}
             >
               <span className="sr-only">Open user menu</span>
-              {user.userData && user.userData.image &&
-                <Avatar imagePath={user.userData.image} size="m" />
-              }
+              <Avatar imagePath={user.userData.image} size="m" />
             </button>
           </div>
-          {/* Profile dropdown panel, show/hide based on dropdown state.
-  
-              Entering: "transition ease-out duration-100"
-                From: "transform opacity-0 scale-95"
-                To: "transform opacity-100 scale-100"
-              Leaving: "transition ease-in duration-75"
-                From: "transform opacity-100 scale-100"
-                To: "transform opacity-0 scale-95" */}
           <div
             className={`transition ${profileDropdownOpen
               ? "ease-out duration-100 transform scale-100 visible"
@@ -124,7 +117,7 @@ function RightMenu(props) {
             aria-labelledby="user-menu"
           >
             <Link
-              to="#"
+              to={`/profile/${user.userData._id}`}
               onMouseDown={onLinkClick}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
@@ -132,7 +125,7 @@ function RightMenu(props) {
               Your Profile
             </Link>
             <Link
-              to="#"
+              to="/video/upload"
               onMouseDown={onLinkClick}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
@@ -140,7 +133,7 @@ function RightMenu(props) {
               Settings
             </Link>
             <Link
-              onMouseDown={logoutHandler}
+              onMouseDown={handleLogout}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
@@ -148,6 +141,15 @@ function RightMenu(props) {
             </Link>
           </div>
         </div>
+      </div>
+    )
+  } else {
+    return (
+      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 tracking-wider">
+        <Link to="/login">Signin</Link>
+        <Link className="ml-6" to="/register">
+          Signup
+        </Link>
       </div>
     );
   }

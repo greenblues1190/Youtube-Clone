@@ -128,7 +128,6 @@ router.post("/getSubscribedVideos", (req, res) => {
   Subscriber.find({ userFrom: req.body.userFrom })
     .exec((err, subscriptions) => {
       if (err) return res.send(err);
-
       let subscribedUsers = [];
       subscriptions.map(subscription => {
         subscribedUsers.push(subscription.userTo);
@@ -146,15 +145,25 @@ router.post("/getSubscribedVideos", (req, res) => {
 });
 
 router.post("/getVideoDetail", (req, res) => {
-  Video.findOne({ "_id": req.body.videoId })
+  Video.findOne({ _id: req.body.videoId })
     .populate('writer')
     .exec((err, videoDetail) => {
-      if (err) return res.send(err);
+      if (err) return res.status(400).send(err);
       return res.status(200).json({
         success: true,
         videoDetail
       })
     })
+})
+
+router.post("/addView", (req, res) => {
+  Video.findOneAndUpdate({ _id: req.body.videoId }, { $inc: { views: 1 } }, (err, doc) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).json({
+      success: true,
+      doc
+    })
+  })
 })
 
 module.exports = router;

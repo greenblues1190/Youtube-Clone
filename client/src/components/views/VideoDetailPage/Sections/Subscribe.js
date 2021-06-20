@@ -32,7 +32,7 @@ function Subscribe(props) {
     // if userTo is userFrom, or not logined, disable the subscribe button
     setIsMyChannel(props.userTo === localStorage.getItem('userId'));
     setIsLogined(user.userData.isAuth ? true : false);
-  }, [])
+  }, [props.userTo, user.userData.isAuth])
 
   const onSubscribe = () => {
     let variable = {

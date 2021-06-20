@@ -15,7 +15,7 @@ function Comment(props) {
 
   useEffect(() => {
     let replyNumber = 0;
-    props.commentList.map(comment => {
+    props.commentList.forEach(comment => {
       if (comment.pId === props.commentId) {
         replyNumber++;
       }

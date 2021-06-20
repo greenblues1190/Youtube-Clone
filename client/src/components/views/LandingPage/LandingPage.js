@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+// import { useSelector } from 'react-redux';
 import Axios from 'axios';
 import { VIDEO_SERVER } from "../../Config";
 import VideoCard from "../Commons/VideoCard";
 
 function LandingPage() {
+    // const user = useSelector(state => state.user)
     const [Video, setVideo] = useState([]);
 
     useEffect(() => {
         Axios.get(`${VIDEO_SERVER}/getVideos`)
             .then(res => {
                 if (res.data.success) {
+                    
                     setVideo(res.data.videos);
                 } else {
                     alert('비디오 가져오기를 실패하였습니다.');
@@ -17,12 +20,16 @@ function LandingPage() {
             })
     }, [])
 
-    const renderCards = Video.map(video => {
-        return (
-            <VideoCard
-                video={video}
-            />
-        )
+    const renderCards = (Video || []).map(video => {
+        if (video.privacy === 1) {
+            return (
+                <VideoCard
+                    video={video}
+                />
+            )
+        } else {
+            return null
+        }
     })
 
     return (
