@@ -8,7 +8,6 @@ const { Comment } = require("../models/Comment");
 
 router.post('/saveComment', (req, res) => {
   // save the comment
-  console.log(req.body)
   const comment = new Comment(req.body)
   comment.save((err, doc) => {
     if (err) return res.status(400).send(err);

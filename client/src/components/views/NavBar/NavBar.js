@@ -1,110 +1,113 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import RightMenu from "./RightMenu";
+import SearchBar from "./SearchBar";
 
-function NavBar() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const NavBar = ({ location }) => {
+  const [DrawerOpen, setDrawerOpen] = useState(false);
 
   const onClickDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
+    setDrawerOpen(!DrawerOpen);
   };
 
+  const switchBGColor = (path) => {
+    const highlighted = 'text-black hover:bg-gray-300 bg-gray-200 ';
+    const notHighlighted = 'text-black hover:bg-gray-300';
+    const parsedPaths = location.pathname.split('/');
+
+    if (parsedPaths[1] === path) {
+      return highlighted;
+    } else {
+      return notHighlighted;
+    }
+  }
+
   return (
-    <div className="fixed z-50 w-full bg-white shadow h-12">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-12">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Mobile menu button */}
-            <button
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-expanded="false"
-              onClick={onClickDrawerToggle}
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="block h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="#000"
-                aria-hidden="true"
+    <div className="fixed z-50 w-full bg-white shadow-sm h-12">
+      <div className="mx-auto px-2 sm:px-6 sm:pr-8">
+        <div className="relative flex items-center justify-between h-12 space-x-4">
+          <div className="flex space-x-2">
+            <div className="inset-y-0 left-0 flex items-center lg:hidden">
+              {/* Mobile menu button */}
+              <button
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                aria-expanded="false"
+                onClick={onClickDrawerToggle}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={
-                    drawerOpen
-                      ? "M6 18L18 6M6 6l12 12"
-                      : "M4 6h16M4 12h16M4 18h16"
-                  }
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="flex-1 flex items-center justify-center sm:justify-start">
-            <Link
-              to="/"
-            >
-              <div className="flex-shrink-0 flex items-center space-x-2">
-                <img
-                  className="block h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                  alt="Workflow"
-                ></img>
-                <p className="hidden lg:block  w-auto text-xl text-black tracking-widest">
-                  Videoshare
+                <span className="sr-only">Open main menu</span>
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#000"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d={
+                      DrawerOpen
+                        ? "M6 18L18 6M6 6l12 12"
+                        : "M4 6h16M4 12h16M4 18h16"
+                    }
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="flex w-max items-center justify-center">
+              <Link
+                to="/"
+              >
+                <div className="flex items-center space-x-2">
+                  <img
+                    className="block w-8 h-8"
+                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                    alt="Workflow"
+                  ></img>
+                  <p className="hidden sm:block text-xl text-black tracking-tight">
+                    Videoshare
                   </p>
-              </div>
-            </Link>
-            <div className="hidden sm:block sm:ml-6">
-              <div className="flex space-x-4">
-                {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white"  */}
-                <Link
-                  to="/"
-                  className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Home
-                </Link>
-                <Link
-                  to="/subscription"
-                  className="text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Subscription
-                </Link>
+                </div>
+              </Link>
+              <div className="hidden lg:block lg:ml-6">
+                <div className="flex space-x-4">
+                  <Link
+                    to="/"
+                    className={`${switchBGColor('')} px-3 py-2 rounded-md text-sm font-medium`}
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/subscription"
+                    className={`${switchBGColor('subscription')} px-3 py-2 rounded-md text-sm font-medium`}
+                  >
+                    Subscription
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
+          <SearchBar />
           <RightMenu />
         </div>
       </div>
 
-      <div className={`${drawerOpen ? "block" : "hidden"}  bg-white bg-opacity-50 sm:hidden shadow`}>
-        <div className="px-2 pt-2 pb-3 space-y-1">
+      <div className={`${DrawerOpen ? "block" : "hidden"}  bg-white lg:hidden shadow-sm`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 font-medium">
           {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white"  */}
           <Link
             to="/"
-            className="bg-black text-white block px-3 py-2 rounded-md text-base font-medium"
+            className={`${switchBGColor('')} block px-3 py-2 rounded-md text-base`}
           >
-            Dashboard
+            Home
           </Link>
           <Link
-            to="/"
-            className="text-black hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            to="/subscription"
+            className={`${switchBGColor('subscription')} block px-3 py-2 rounded-md text-base`}
           >
-            Team
-          </Link>
-          <Link
-            to="/"
-            className="text-black hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Projects
-          </Link>
-          <Link
-            to="/"
-            className="text-black hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Calendar
+            Subscription
           </Link>
         </div>
       </div>
@@ -112,4 +115,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default withRouter(NavBar);

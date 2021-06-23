@@ -21,7 +21,6 @@ const target = (req) => {
 router.post('/getLikes', (req, res) => {
   // get like data
   const query = target(req)
-  // console.log(req.body, query);
   Like.find(query)
     .exec((err, likes) => {
       if (err) return res.status(400).send(err);

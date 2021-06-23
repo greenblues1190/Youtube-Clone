@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import moment from 'moment';
-import { VIDEO_SERVER } from '../../Config';
+import { VIDEO_SERVER, SUBSCRIBER_SERVER } from '../../Config';
 import SideCard from './Sections/SideCard';
-import Subscribe from './Sections/Subscribe';
+import Subscribe from '../Commons/Subscribe';
 import Avatar from '../Commons/Avatar';
 import CommentSection from './Sections/CommentSection';
 import LikeDislikeButton from '../Commons/LikeDislikeButton';
@@ -15,6 +16,7 @@ function VideoDetailPage(props) {
   const [VideoDetail, setVideoDetail] = useState([]);
   const [RelatedVideos, setRelatedVideos] = useState([]);
   const [IsPlayed, setIsPlayed] = useState(false);
+  const [SubscriberNumber, setSubscriberNumber] = useState(0);
 
   useEffect(() => {
     // get video detail
@@ -36,7 +38,19 @@ function VideoDetailPage(props) {
           alert('비디오 가져오기를 실패하였습니다.');
         }
       })
-  }, [videoId])
+
+    // get subscribers number
+    if (user.userData) {
+      Axios.post(`${SUBSCRIBER_SERVER}/getSubscriberNumber`, { userTo: user.userData._id })
+        .then(res => {
+          if (res.data.success) {
+            setSubscriberNumber(res.data.subscriberNumber)
+          } else {
+            alert("구독자 수 정보를 받아오지 못했습니다.");
+          }
+        })
+    }
+  }, [user.userData, videoId])
 
   const renderSideCards = RelatedVideos.map(relatedVideo => {
     return (
@@ -81,10 +95,11 @@ function VideoDetailPage(props) {
             {/* Video Metadata */}
             {(VideoDetail.privacy === 1 || VideoDetail.writer._id === user.userData._id) ?
               <>
-                <div className="border-b">
+                <div className="my-4">
+                  {/* Title */}
                   <div className="flex flex-row items-center justify-between gap-4">
                     <h1
-                      className="text-lg leading-6 tracking-wide break-all line-clamp-2 my-4"
+                      className="text-lg leading-6 tracking-wide break-all line-clamp-2"
                     >
                       {VideoDetail.title}
                     </h1>
@@ -96,30 +111,40 @@ function VideoDetailPage(props) {
                       </div>
                     }
                   </div>
-                  <div
-                    className="flex flex-row items-center space-x-3 w-full my-4"
-                  >
-                    <Avatar imagePath={VideoDetail.writer.image} size="l" />
-                    <div className="w-full flex flex-col">
-                      <p className="text-sm font-medium tracking-wide">
-                        {VideoDetail.writer.name}
-                      </p>
-                      <p className="text-xs tracking-wider text-gray-400">
-                        {VideoDetail.views} views • {moment(VideoDetail.createdAt).format("MMM Do YY")}
-                      </p>
-                    </div>
-                    <div className="w-full flex flex-row gap-2 justify-end">
-                      <LikeDislikeButton type="video" objectId={videoId} user={user} />
-                      <Subscribe
-                        userTo={VideoDetail.writer._id}
-                      />
-                    </div>
-
+                  {/* Views, Date, Like Dislike Button */}
+                  <div className="flex justify-between my-3">
+                    <p className="w-max text-sm tracking-wider text-gray-400">
+                      {VideoDetail.views} views • {moment(VideoDetail.createdAt).format("MMM Do YY")}
+                    </p>
+                    <LikeDislikeButton type="video" objectId={videoId} user={user} size="sm" />
                   </div>
+                  <hr />
+                  {/* Profile, Subscribe Button */}
+                  <div className="flex flex-row items-center justify-between space-x-3 my-4">
+                    <div className="flex items-center space-x-3">
+                      <Link to={`/profile/${VideoDetail.writer._id}`} className="w-max">
+                        <Avatar imagePath={VideoDetail.writer.image} size="l" />
+                      </Link>
+                      <div className="w-max flex flex-col">
+                        <Link to={`/profile/${VideoDetail.writer._id}`}>
+                          <p className="text-sm font-medium tracking-wide">
+                            {VideoDetail.writer.name}
+                          </p>
+                        </Link>
+                        <p className="w-max text-xs tracking-wider text-gray-400">
+                          {SubscriberNumber} subscribers
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-max">
+                      <Subscribe userTo={VideoDetail.writer._id} userFrom={user} />
+                    </div>
+                  </div>
+                  <p className="text-sm">{VideoDetail.description}</p>
                 </div>
 
-
-                <div className="my-4">
+                <hr />
+                <div className="mt-4">
                   <CommentSection videoId={videoId} />
                 </div>
               </>

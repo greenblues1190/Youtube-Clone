@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Route, Switch } from "react-router-dom";
 import Auth from "../hoc/auth";
 // pages for this product
+import NotFoundPage from './views/NotFoundPage/NotFoundPage';
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer"
 import LandingPage from "./views/LandingPage/LandingPage";
@@ -11,7 +12,8 @@ import VideoUploadPage from "./views/VideoUploadPage/VideoUploadPage";
 import VideoDetailPage from './views/VideoDetailPage/VideoDetailPage';
 import SubscriptionPage from './views/SubscriptionPage/SubscriptionPage';
 import ProfilePage from './views/ProfilePage/ProfilePage';
-import NotFoundPage from './views/NotFoundPage/NotFoundPage';
+import SettingsPage from './views/SettingsPage/SettingsPage';
+import SearchPage from './views/SearchPage/SearchPage';
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
@@ -30,6 +32,8 @@ function App() {
           <Route exact path="/video/:videoId" component={Auth(VideoDetailPage, null)} />
           <Route exact path="/subscription" component={Auth(SubscriptionPage, true)} />
           <Route exact path="/profile/:userId" component={Auth(ProfilePage, null)} />
+          <Route exact path="/settings" component={Auth(SettingsPage, true)} />
+          <Route exact path="/search" component={Auth(SearchPage, null)} />
           <Route component={Auth(NotFoundPage, null)} />
         </Switch>
       </div>

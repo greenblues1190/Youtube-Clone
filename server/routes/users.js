@@ -52,7 +52,8 @@ router.post("/login", (req, res) => {
                     .cookie("w_auth", user.token)
                     .status(200)
                     .json({
-                        loginSuccess: true, userId: user._id
+                        loginSuccess: true,
+                        userId: user._id
                     });
             });
         });
@@ -67,5 +68,15 @@ router.get("/logout", auth, (req, res) => {
         });
     });
 });
+
+router.post('/getUserProfile', (req, res) => {
+    User.findOne({ _id: req.body.userId }, (err, doc) => {
+        if (err) return res.status(400).send(err);
+        return res.status(200).json({
+            success: true,
+            doc
+        })
+    })
+})
 
 module.exports = router;

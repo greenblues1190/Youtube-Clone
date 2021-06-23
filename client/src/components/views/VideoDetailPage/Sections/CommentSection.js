@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Axios from 'axios';
 import { COMMENT_SERVER } from '../../../Config';
 import Comment from './Comment';
+import Avatar from '../../Commons/Avatar';
 
 function CommentSection(props) {
   const videoId = props.videoId;
@@ -47,30 +48,37 @@ function CommentSection(props) {
 
   const reloadComment = (newComment) => {
     setComments(Comments.concat(newComment));
-    console.log(newComment);
   }
 
   return (
     <div className="flex flex-col gap-6">
       <p className="font-medium"> {Comments.length} Comments </p>
       {/* Root Comment Section */}
-      <form
-        className="w-full bg-white rounded-lg"
-        onSubmit={handleSubmit}
-      >
-        <textarea
-          className="w-full h-20 p-2 rounded border text-sm resize-none placeholder-gray-600 focus:outline-none"
-          onChange={handleChange}
-          value={CommentContent}
-          placeholder="Type your comment"
-        />
-        <br />
-        <button
-          className="py-1 px-4 border border-gray-400 rounded-lg text-sm tracking-wide hover:bg-gray-100 focus:outline-none"
-          onClick={handleSubmit}
-          disabled={user.userData.isAuth === false ? true : false}
-        > Post Comment </button>
-      </form>
+      <div className="flex flex-row space-x-3">
+        <Avatar imagePath={user.userData.image} size="m" />
+        <form
+          className="w-full bg-white rounded-lg"
+          onSubmit={handleSubmit}
+        >
+          <textarea
+            className="w-full h-20 p-2 rounded border text-sm resize-none placeholder-gray-600 focus:outline-none"
+            onChange={handleChange}
+            value={CommentContent}
+            placeholder="Type your comment"
+            disabled={user.userData.isAuth === false ? true : false}
+          />
+          <br />
+          <div className="flex justify-end w-full">
+            <button
+              className="py-1 px-4 border border-gray-400 rounded-lg text-sm tracking-wide hover:bg-gray-100 focus:outline-none"
+              onClick={handleSubmit}
+              disabled={user.userData.isAuth === false ? true : false}
+            >
+              Post Comment
+            </button>
+          </div>
+        </form>
+      </div>
 
       {/* Comment Section */}
       <div className="flex flex-col gap-6">
@@ -80,6 +88,7 @@ function CommentSection(props) {
             <Comment
               commentId={comment._id}
               videoId={comment.videoId}
+              userId={comment.writer._id}
               avatar={comment.writer.image}
               avatarSize="m"
               author={comment.writer.name}

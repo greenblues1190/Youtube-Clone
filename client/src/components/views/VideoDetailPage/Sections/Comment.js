@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Avatar from '../../Commons/Avatar';
 import moment from 'moment';
@@ -63,6 +64,7 @@ function Comment(props) {
         <Comment
           commentId={comment._id}
           videoId={comment.videoId}
+          userId={comment.writer._id}
           avatar={comment.writer.image}
           avatarSize="m"
           author={comment.writer.name}
@@ -80,23 +82,25 @@ function Comment(props) {
   return (
     <div className="flex flex-row space-x-3 w-full">
       <div className="pt-1">
-        <Avatar
-          imagePath={props.avatar}
-          size={props.avatarSize}
-        />
+        <Link to={`/profile/${props.userId}`}>
+          <Avatar
+            imagePath={props.avatar}
+            size={props.avatarSize}
+          />
+        </Link>
       </div>
 
       <div className="w-full flex flex-col gap-1">
         <p
           className="text-sm font-medium tracking-wide"
         >
-          {props.author} <span className="text-xs font-normal text-gray-400">{moment(props.updatedAt).fromNow()}{props.createdAt === props.updatedAt ? "" : ` (editted ${moment(props.updatedAt).fromNow()})`}</span>
+          <Link to={`/profile/${props.userId}`}>{props.author}</Link> <span className="text-xs font-normal text-gray-400">{moment(props.updatedAt).fromNow()}{props.createdAt === props.updatedAt ? "" : ` (editted ${moment(props.updatedAt).fromNow()})`}</span>
         </p>
         <p className="text-sm tracking-wide"> {props.content} </p>
 
         {/* Reply Comment Form */}
         <div className="flex flex-row gap-2 pt-1 items-center text-gray-400">
-          <LikeDislikeButton type="comment" objectId={props.commentId} user={user} />
+          <LikeDislikeButton type="comment" objectId={props.commentId} user={user} size="xs" />
           {
             user.userData.isAuth &&
             <button

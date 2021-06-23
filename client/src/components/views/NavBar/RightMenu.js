@@ -1,26 +1,19 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { USER_SERVER } from "../../Config";
 import { withRouter, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Axios from "axios";
+import { USER_SERVER } from "../../Config";
 import Avatar from '../Commons/Avatar';
-import moment from 'moment';
+
 
 function RightMenu(props) {
-  const user = useSelector((state) => state.user);
+  const user = useSelector(state => state.user);
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  const renderthings = () => {
-    console.log(`[${moment(Date.now()).format('hh:mm:ss')}] rendered: right menu`);
-    return (
-      <p>right menu here</p>
-    )
-  }
-
   const handleLogout = () => {
     setProfileDropdownOpen(false);
-    axios.get(`${USER_SERVER}/logout`).then((response) => {
+    Axios.get(`${USER_SERVER}/logout`).then((response) => {
       if (response.status === 200) {
         window.localStorage.removeItem("userId");
         props.history.push("/login");
@@ -30,78 +23,64 @@ function RightMenu(props) {
     });
   };
 
-  const onLinkClick = () => {
-    // alert("beep!");
-    setProfileDropdownOpen(false);
-  }
-
-  const onClickProfile = () => {
+  const handleClickAvatar = (event) => {
     setProfileDropdownOpen(!profileDropdownOpen);
   };
-  const onBlurProfile = () => {
+
+  const handleBlurAvatar = (event) => {
     if (profileDropdownOpen) {
       setProfileDropdownOpen(false);
     }
   };
 
-  // return (
-  //   renderthings()
-  // )
+  const handleClickProfile = (event) => {
+    props.history.push(`/profile/${localStorage.getItem('userId')}`);
+  }
+
+  const handleClickSettings = (event) => {
+    props.history.push(`/settings`);
+  }
+
   if (user.userData && user.userData.isAuth) {
-    renderthings()
     return (
-      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+      <div className=" inset-y-0 right-0 flex items-center sm:inset-auto sm:ml-6">
         <Link
           to="/video/upload"
-          className="relative bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+          className="relative p-1 rounded-full text-gray-500 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
         >
           <span className="sr-only">Upload Video</span>
-          {/* Heroicon name: bell  */}
+          {/* Heroicon name: plus  */}
           <svg
-            className="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
+            className="h-6 w-6"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
+            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
           </svg>
         </Link>
-        <button className="ml-3 relative bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <button className="ml-3 relative p-1 rounded-full text-gray-500 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span className="sr-only">View notifications</span>
           {/* Heroicon name: bell  */}
           <svg
-            className="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
+            className="h-6 w-6"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-            />
+            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
           </svg>
         </button>
 
         {/* Profile dropdown */}
-        <div className="ml-5 relative">
+        <div className="ml-5 w-max relative">
           <div>
             <button
               className={`bg-gray-800 flex text-sm rounded-full focus:outline-none ${profileDropdownOpen ? "focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" : ""}`}
               id="user-menu"
               aria-haspopup="true"
-              onClick={onClickProfile}
-              onBlur={onBlurProfile}
+              onClick={handleClickAvatar}
+              onBlur={handleBlurAvatar}
             >
               <span className="sr-only">Open user menu</span>
               <Avatar imagePath={user.userData.image} size="m" />
@@ -111,34 +90,32 @@ function RightMenu(props) {
             className={`transition ${profileDropdownOpen
               ? "ease-out duration-100 transform scale-100 visible"
               : "transition ease-in duration-75 transform scale-95 invisible"
-              } origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5`}
+              } origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5`}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="user-menu"
           >
-            <Link
-              to={`/profile/${user.userData._id}`}
-              onMouseDown={onLinkClick}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            <button
+              onMouseDown={handleClickProfile}
+              className="block w-full px-4 py-2 text-sm text-gray-700 text-justify hover:bg-gray-100"
               role="menuitem"
             >
               Your Profile
-            </Link>
-            <Link
-              to="/video/upload"
-              onMouseDown={onLinkClick}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            </button>
+            <button
+              onMouseDown={handleClickSettings}
+              className="block w-full px-4 py-2 text-sm text-gray-700 text-justify hover:bg-gray-100"
               role="menuitem"
             >
               Settings
-            </Link>
-            <Link
+            </button>
+            <button
               onMouseDown={handleLogout}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-sm text-gray-700 text-justify hover:bg-gray-100"
               role="menuitem"
             >
               Sign out
-            </Link>
+            </button>
           </div>
         </div>
       </div>

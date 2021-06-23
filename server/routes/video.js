@@ -85,7 +85,7 @@ router.post("/thumbnail", (req, res) => {
       });
     })
     .on("error", function (err) {
-      console.log(err);
+      console.error(err);
       return res.json({ success: false, err });
     })
     .screenshots({
@@ -144,6 +144,19 @@ router.post("/getSubscribedVideos", (req, res) => {
     })
 });
 
+router.post("/getUserVideos", (req, res) => {
+  // get subscribed users with userFrom
+  Video.find({ writer: { _id: req.body.userId } })
+    .populate('writer')
+    .exec((err, videos) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        success: true,
+        videos
+      })
+    })
+});
+
 router.post("/getVideoDetail", (req, res) => {
   Video.findOne({ _id: req.body.videoId })
     .populate('writer')
@@ -164,6 +177,27 @@ router.post("/addView", (req, res) => {
       doc
     })
   })
+})
+
+router.get('/search', (req, res) => {
+  Video.find(
+    {
+      $text: {
+        $search: req.query.query,
+        $caseSensitive: false,
+      }
+    },
+    { score: { $meta: "textScore" } }
+  ).sort(
+    { score: { $meta: "textScore" } }
+  ).populate('writer')
+    .exec((err, doc) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        success: true,
+        doc
+      })
+    })
 })
 
 module.exports = router;

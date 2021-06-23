@@ -1,26 +1,14 @@
-import Axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
-import { SUBSCRIBER_SERVER } from '../../../Config'
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { SUBSCRIBER_SERVER } from '../../Config'; 
 
 function Subscribe(props) {
-  const user = useSelector((state) => state.user)
-  const [SubscriberNumber, setSubscriberNumber] = useState(0)
   const [IsSubscribed, setIsSubscribed] = useState(false)
   const [IsMyChannel, setIsMyChannel] = useState(true)
   const [IsLogined, setIsLogined] = useState(false)
 
   useEffect(() => {
-    Axios.post(`${SUBSCRIBER_SERVER}/getSubscriberNumber`, { userTo: props.userTo })
-      .then(res => {
-        if (res.data.success) {
-          setSubscriberNumber(res.data.subscriberNumber)
-        } else {
-          alert("구독자 수 정보를 받아오지 못했습니다.");
-        }
-      })
-
-    Axios.post(`${SUBSCRIBER_SERVER}/isSubscribed`, { userTo: props.userTo, userFrom: localStorage.getItem('userId') })
+    Axios.post(`${SUBSCRIBER_SERVER}/isSubscribed`, { userTo: props.userTo, userFrom: props.userFrom.userData._id })
       .then(res => {
         if (res.data.success) {
           setIsSubscribed(res.data.isSubscribed);
@@ -30,14 +18,14 @@ function Subscribe(props) {
       })
 
     // if userTo is userFrom, or not logined, disable the subscribe button
-    setIsMyChannel(props.userTo === localStorage.getItem('userId'));
-    setIsLogined(user.userData.isAuth ? true : false);
-  }, [props.userTo, user.userData.isAuth])
+    setIsMyChannel(props.userTo === props.userFrom.userData._id);
+    setIsLogined(props.userFrom.userData.isAuth ? true : false);
+  }, [props.userFrom.userData._id, props.userFrom.userData.isAuth, props.userTo])
 
   const onSubscribe = () => {
     let variable = {
       userTo: props.userTo,
-      userFrom: localStorage.getItem('userId')
+      userFrom: props.userFrom.userData._id
     }
     if (IsSubscribed) {
       // if the channel is already subscribed
@@ -45,7 +33,6 @@ function Subscribe(props) {
         .then(res => {
           if (res.data.success) {
             setIsSubscribed(false);
-            setSubscriberNumber(SubscriberNumber - 1)
           } else {
             alert("구독 해지를 실패했습니다.");
           }
@@ -56,7 +43,6 @@ function Subscribe(props) {
         .then(res => {
           if (res.data.success) {
             setIsSubscribed(true);
-            setSubscriberNumber(SubscriberNumber + 1)
           } else {
             alert("구독을 실패했습니다.");
           }
@@ -70,7 +56,7 @@ function Subscribe(props) {
       onClick={onSubscribe}
       disabled={IsMyChannel || !IsLogined}
     >
-      {SubscriberNumber} {IsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
+      {IsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
     </button>
   )
 }

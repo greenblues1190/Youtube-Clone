@@ -28,7 +28,7 @@ function SubscriptionPage(props) {
     return (
         <div className="w-11/12 flex flex-col justify-center divide-y">
             <div className="mt-4">
-                <div className="text-3xl m-2">Subscription</div>
+                <p className="text-3xl mb-4">Subscription</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4">
                     {renderCards}
                 </div>
