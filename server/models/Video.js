@@ -9,14 +9,11 @@ const videoSchema = mongoose.Schema(
     },
     title: {
       type: String,
-      maxlength: 50,
+      maxlength: 100,
     },
     description: {
       type: String,
       maxlength: 1000,
-    },
-    privacy: {
-      type: Number,
     },
     filePath: {
       type: String,
@@ -33,6 +30,12 @@ const videoSchema = mongoose.Schema(
     },
     thumbnail: {
       type: String,
+    },
+    isPrivate: {
+      type: Boolean,
+    },
+    isDeleted: {
+      type: Boolean,
     },
   },
   { timestamps: true }

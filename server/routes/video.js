@@ -110,6 +110,44 @@ router.post("/uploadVideo", (req, res) => {
   });
 });
 
+router.post("/updateVideo", (req, res) => {
+  // update video metadata
+  query = { _id: req.body.videoId };
+  updatedField = req.body.updatedMetadata;
+  Video.findOneAndUpdate(query, { $set: updatedField })
+    .exec((err, doc) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        success: true,
+        doc
+      })
+    })
+});
+
+router.post("/deleteVideo", (req, res) => {
+  // delete video
+  query = { _id: req.body.videoId };
+  updatedField = { isDeleted: true }
+
+  Video.findOneAndUpdate(query, { $set: updatedField })
+    .exec((err, doc) => {
+      if (err) return res.status(400).send(err);
+      return res.status(200).json({
+        success: true,
+        doc
+      })
+    })
+
+  // Video.findOneAndDelete(query)
+  //   .exec((err, doc) => {
+  //     if (err) return res.status(400).send(err);
+  //     res.status(200).json({
+  //       success: true,
+  //       doc
+  //     })
+  //   })
+})
+
 router.get("/getVideos", (req, res) => {
   // get videos from DB and send it to the client
   Video.find()
@@ -128,10 +166,7 @@ router.post("/getSubscribedVideos", (req, res) => {
   Subscriber.find({ userFrom: req.body.userFrom })
     .exec((err, subscriptions) => {
       if (err) return res.send(err);
-      let subscribedUsers = [];
-      subscriptions.map(subscription => {
-        subscribedUsers.push(subscription.userTo);
-      })
+      const subscribedUsers = subscriptions.map(subscription => subscription.userTo);
       Video.find({ writer: { $in: subscribedUsers } })
         .populate('writer')
         .exec((err, videos) => {
@@ -148,11 +183,11 @@ router.post("/getUserVideos", (req, res) => {
   // get subscribed users with userFrom
   Video.find({ writer: { _id: req.body.userId } })
     .populate('writer')
-    .exec((err, videos) => {
+    .exec((err, userVideos) => {
       if (err) return res.status(400).send(err);
       res.status(200).json({
         success: true,
-        videos
+        userVideos
       })
     })
 });
@@ -193,9 +228,10 @@ router.get('/search', (req, res) => {
   ).populate('writer')
     .exec((err, doc) => {
       if (err) return res.status(400).send(err);
+      const filteredDoc = doc.filter(doc => !doc.isDeleted && !doc.isPrivate);
       res.status(200).json({
         success: true,
-        doc
+        filteredDoc
       })
     })
 })

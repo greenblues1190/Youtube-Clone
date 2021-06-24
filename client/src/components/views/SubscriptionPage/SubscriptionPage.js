@@ -18,11 +18,15 @@ function SubscriptionPage(props) {
     }, [props.user.userData])
 
     const renderCards = Video.map(video => {
-        return (
-            <VideoCard
-                video={video}
-            />
-        )
+        if (!video.isPrivate && !video.isDeleted) {
+            return (
+                <VideoCard
+                    video={video}
+                />
+            )
+        } else {
+            return null
+        }
     })
 
     return (

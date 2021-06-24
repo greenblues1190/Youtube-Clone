@@ -44,6 +44,27 @@ router.post('/getDislikes', (req, res) => {
     })
 })
 
+router.post("/getLikedVideos", (req, res) => {
+  const query = { userId: req.body.userId };
+
+  // get videos which user liked
+  Like.find(query)
+    .populate({
+      path: 'videoId',
+      populate: {
+        path: 'writer'
+      }
+    })
+    .exec((err, likes) => {
+      if (err) return res.send(err);
+      const likedVideos = likes.map(like => like.videoId).filter(likeVideo => likeVideo);
+      res.status(200).json({
+        success: true,
+        likedVideos
+      })
+    });
+})
+
 router.post('/like', (req, res) => {
   // add like
   const newLike = { userId: req.body.userId, ...target(req) }

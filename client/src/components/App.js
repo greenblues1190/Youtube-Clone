@@ -10,6 +10,7 @@ import LoginPage from "./views/LoginPage/LoginPage";
 import RegisterPage from "./views/RegisterPage/RegisterPage";
 import VideoUploadPage from "./views/VideoUploadPage/VideoUploadPage";
 import VideoDetailPage from './views/VideoDetailPage/VideoDetailPage';
+import VideoEditPage from './views/VideoEditPage/VideoEditPage';
 import SubscriptionPage from './views/SubscriptionPage/SubscriptionPage';
 import ProfilePage from './views/ProfilePage/ProfilePage';
 import SettingsPage from './views/SettingsPage/SettingsPage';
@@ -30,6 +31,7 @@ function App() {
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
           <Route exact path="/video/upload" component={Auth(VideoUploadPage, true)} />
           <Route exact path="/video/:videoId" component={Auth(VideoDetailPage, null)} />
+          <Route exact path="/editVideo/:videoId" component={Auth(VideoEditPage, true)} />
           <Route exact path="/subscription" component={Auth(SubscriptionPage, true)} />
           <Route exact path="/profile/:userId" component={Auth(ProfilePage, null)} />
           <Route exact path="/settings" component={Auth(SettingsPage, true)} />

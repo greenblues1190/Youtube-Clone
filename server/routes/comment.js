@@ -23,9 +23,29 @@ router.post('/saveComment', (req, res) => {
   })
 });
 
+router.post('/updateComment', (req, res) => {
+  // update the comment
+  query = { _id: req.body.commentId };
+  updatedField = req.body.updatedComment;
+
+  Comment.findOneAndUpdate(query, { $set: updatedField })
+    .exec((err, doc) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        success: true,
+        doc
+      })
+    })
+})
+
 router.post("/deleteComment", (req, res) => {
   // delete the comment
-  Comment.findOneAndDelete({ _id: commentId })
+  query = { _id: req.body.commentId };
+  updatedField = {
+    isDeleted: true
+  };
+
+  Comment.findOneAndUpdate(query, { $set: updatedField })
     .exec((err, doc) => {
       if (err) return res.status(400).send(err);
       return res.status(200).json({
@@ -33,9 +53,19 @@ router.post("/deleteComment", (req, res) => {
         doc
       })
     })
+
+  // delete comment causes orphan replies
+  // Comment.findOneAndDelete({ _id: commentId })
+  //   .exec((err, doc) => {
+  //     if (err) return res.status(400).send(err);
+  //     return res.status(200).json({
+  //       success: true,
+  //       doc
+  //     })
+  //   })
 })
 
-router.post("/getVideoComments", (req, res) => [
+router.post("/getVideoComments", (req, res) => {
   // get all comments of the video
   Comment.find({ 'videoId': req.body.videoId })
     .populate('writer')
@@ -46,6 +76,6 @@ router.post("/getVideoComments", (req, res) => [
         comments
       })
     })
-])
+})
 
 module.exports = router;

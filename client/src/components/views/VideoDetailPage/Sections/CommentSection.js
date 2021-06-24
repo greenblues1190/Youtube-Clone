@@ -86,16 +86,7 @@ function CommentSection(props) {
           !comment.pId &&
           <React.Fragment>
             <Comment
-              commentId={comment._id}
-              videoId={comment.videoId}
-              userId={comment.writer._id}
-              avatar={comment.writer.image}
-              avatarSize="m"
-              author={comment.writer.name}
-              pId={comment.pId}
-              content={comment.content}
-              createdAt={comment.createdAt}
-              updatedAt={comment.updatedAt}
+              comment={comment}
               reloadComment={reloadComment}
               commentList={Comments}
             />

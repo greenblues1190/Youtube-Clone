@@ -52,7 +52,7 @@ function Subscribe(props) {
 
   return (
     <button
-      className={`${IsSubscribed ? "bg-blue-800 border-blue-900 " : "bg-blue-700 border-blue-800 "}w-max text-sm rounded px-3 py-2 m-1 border-b-4 shadow-lg text-white disabled:opacity-50`}
+      className={`${IsSubscribed ? "bg-blue-800 border-blue-900 " : "bg-blue-700 border-blue-800 "}w-max text-sm rounded px-3 py-2 border-b-4 shadow-lg text-white disabled:opacity-50`}
       onClick={onSubscribe}
       disabled={IsMyChannel || !IsLogined}
     >

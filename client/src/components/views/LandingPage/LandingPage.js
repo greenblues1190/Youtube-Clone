@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import { useSelector } from 'react-redux';
 import Axios from 'axios';
 import { VIDEO_SERVER } from "../../Config";
 import VideoCard from "../Commons/VideoCard";
 
-function LandingPage() {
-    // const user = useSelector(state => state.user)
+function LandingPage(props) {
+    // const user = props.user;
     const [Video, setVideo] = useState([]);
 
     useEffect(() => {
@@ -21,7 +20,7 @@ function LandingPage() {
     }, [])
 
     const renderCards = (Video || []).map(video => {
-        if (video.privacy === 1) {
+        if (!video.isPrivate && !video.isDeleted) {
             return (
                 <VideoCard
                     video={video}

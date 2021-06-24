@@ -15,8 +15,11 @@ const commentSchema = mongoose.Schema({
     ref: "Comment"
   },
   content: {
-    type: String
-  }
+    type: String,
+  },
+  isDeleted: {
+    type: Boolean,
+  },
 }, { timestamps: true });
 
 const Comment = mongoose.model("Comment", commentSchema);

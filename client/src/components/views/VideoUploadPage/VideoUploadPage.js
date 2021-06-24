@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import Axios from "axios";
 import { VIDEO_SERVER } from "../../Config";
-import { useSelector } from "react-redux";
 
 const privacyOptions = [
-  { value: 0, label: "비공개" },
-  { value: 1, label: "공개" },
+  { value: false, label: "공개" },
+  { value: true, label: "비공개" },
 ];
 
 const categoryOptions = [
@@ -17,35 +16,35 @@ const categoryOptions = [
 ];
 
 // max file size (MB)
-const maxFileSize = 100;
+const maxFileSize = 110;
 
 function VideoUploadPage(props) {
-  const user = useSelector((state) => state.user);
+  const user = props.user;
   const [VideoTitle, setVideoTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [Category, setCategory] = useState(categoryOptions[0].value);
-  const [Privacy, setPrivacy] = useState(0);
   const [FilePath, setFilePath] = useState("");
   const [Duration, setDuration] = useState("");
   const [ThumbnailPath, setThumbnailPath] = useState("");
+  const [IsPrivate, setIsPrivate] = useState(false);
 
-  const onTitleChange = (e) => {
+  const handleTitleChange = (e) => {
     setVideoTitle(e.currentTarget.value);
   };
 
-  const onDescriptionChange = (e) => {
+  const handleDescriptionChange = (e) => {
     setDescription(e.currentTarget.value);
   };
 
-  const onCategoryChange = (e) => {
+  const handleCategoryChange = (e) => {
     setCategory(e.currentTarget.value);
   };
 
-  const onPrivacyChange = (e) => {
-    setPrivacy(e.currentTarget.value);
+  const handleIsPrivateChange = (e) => {
+    setIsPrivate(e.currentTarget.value);
   };
 
-  const onDrop = (files) => {
+  const handleDrop = (files) => {
     let formData = new FormData();
     const config = {
       header: { "content-type": "multipart/form-data" },
@@ -71,26 +70,26 @@ function VideoUploadPage(props) {
             }
           });
         } else {
-          alert("failed to save the video in server");
+          alert("failed to save the video in server.");
         }
       })
       .catch((error) => {
-        alert("error occured!");
+        alert("failed to save the video in server.");
       });
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const variables = {
       writer: user.userData._id,
       title: VideoTitle,
       description: Description,
-      privacy: Privacy,
       filePath: FilePath,
       category: Category,
       duration: Duration,
       thumbnail: ThumbnailPath,
+      isPrivate: IsPrivate,
     };
 
     Axios.post(`${VIDEO_SERVER}/uploadVideo`, variables)
@@ -121,15 +120,15 @@ function VideoUploadPage(props) {
         </div>
       </div>
       <div className="mt-5">
-        <form action="#" method="POST" onSubmit={onSubmit}>
+        <form action="#" method="POST" onSubmit={handleSubmit}>
           <div className="shadow sm:rounded-md sm:overflow-hidden">
             <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  커버
+                  Thumbnail
                 </label>
                 <Dropzone
-                  onDrop={onDrop}
+                  onDrop={handleDrop}
                   multiple={false}
                   maxSize={maxFileSize * 1000000} // Maximum file size (in bytes)
                 // acceptedFiles=".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF"
@@ -192,7 +191,7 @@ function VideoUploadPage(props) {
                   type="text"
                   name="title"
                   id="title"
-                  onChange={onTitleChange}
+                  onChange={handleTitleChange}
                   value={VideoTitle}
                   placeholder="title"
                   className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
@@ -210,7 +209,7 @@ function VideoUploadPage(props) {
                     id="about"
                     name="about"
                     rows="5"
-                    onChange={onDescriptionChange}
+                    onChange={handleDescriptionChange}
                     value={Description}
                     className="py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                     placeholder="you@example.com"
@@ -229,7 +228,7 @@ function VideoUploadPage(props) {
                     Category
                   </label>
                   <select
-                    onChange={onCategoryChange}
+                    onChange={handleCategoryChange}
                     className="mt-1 border p-2 w-full rounded-md shadow-sm"
                   >
                     {categoryOptions.map((item, index) => (
@@ -247,8 +246,8 @@ function VideoUploadPage(props) {
                     Privacy
                   </label>
                   <select
-                    onChange={onPrivacyChange}
-                    className="mt-1 border p-2 w-full border rounded-md shadow-sm"
+                    onChange={handleIsPrivateChange}
+                    className="mt-1 border p-2 w-full rounded-md shadow-sm"
                   >
                     {privacyOptions.map((item, index) => (
                       <option key={index} value={item.value}>
@@ -262,7 +261,7 @@ function VideoUploadPage(props) {
             <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
               <button
                 type="submit"
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit}
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Save
