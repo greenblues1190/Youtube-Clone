@@ -24,7 +24,7 @@ const NavBar = ({ location }) => {
 
   return (
     <div className="fixed z-50 w-full bg-white shadow-sm h-12">
-      <div className="mx-auto px-2 sm:px-6 sm:pr-8">
+      <div className="mx-auto px-2 pr-4 sm:px-6 sm:pr-8">
         <div className="relative flex items-center justify-between h-12 space-x-4">
           <div className="flex space-x-2">
             <div className="inset-y-0 left-0 flex items-center lg:hidden">
@@ -62,9 +62,9 @@ const NavBar = ({ location }) => {
               >
                 <div className="flex items-center space-x-2">
                   <img
-                    className="block w-8 h-8"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                    alt="Workflow"
+                    className="block w-8 h-8 rounded-full"
+                    src="/images/icon.png"
+                    alt="Videoshare"
                   ></img>
                   <p className="hidden sm:block text-xl text-black tracking-tight">
                     Videoshare

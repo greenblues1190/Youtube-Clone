@@ -7,6 +7,25 @@ function VideoCard(props) {
   let duration = moment.duration(Math.floor(props.video.duration), 'seconds');
   let updatedTimeFromNow = moment(props.video.createdAt).fromNow();
 
+  const zerofill = (value) => {
+    return ('00' + value).slice(-2)
+  }
+
+  const formattedDuration = (duration) => {
+    if (duration.get("hours") >= 1) {
+      return (
+        <span>
+          {duration.get("hours")}:{zerofill(duration.get("minutes"))}:{zerofill(duration.get("seconds"))}
+        </span>
+      )
+    }
+    return (
+      <span>
+        {duration.get("minutes")}:{zerofill(duration.get("seconds"))}
+      </span>
+    )
+  }
+
   return (
     <Link to={`/video/${props.video._id}`}>
       <div className="flex flex-col h-full max-w-lg mx-auto rounded shadow-md">
@@ -39,9 +58,7 @@ function VideoCard(props) {
                   />
                 </svg>
                 <p className="text-white font-semibold text-xs">
-                  {duration.get("hours") >= 1 ?
-                    <span>{duration.get("hours")}:{duration.get("minutes")}:{duration.get("seconds")}</span> : <span>{duration.get("minutes")}:{duration.get("seconds")}</span>
-                  }
+                  {formattedDuration(duration)}
                 </p>
               </span>
             </div>

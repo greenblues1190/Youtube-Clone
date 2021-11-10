@@ -37,13 +37,9 @@ function RightMenu(props) {
     props.history.push(`/profile/${localStorage.getItem('userId')}`);
   }
 
-  const handleClickSettings = (event) => {
-    props.history.push(`/settings`);
-  }
-
   if (user.userData && user.userData.isAuth) {
     return (
-      <div className=" inset-y-0 right-0 flex items-center sm:inset-auto sm:ml-6">
+      <div className="inset-y-0 right-0 flex items-center sm:inset-auto sm:ml-6">
         <Link
           to="/video/upload"
           className="relative p-1 rounded-full text-gray-500 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -103,13 +99,6 @@ function RightMenu(props) {
               Your Profile
             </button>
             <button
-              onMouseDown={handleClickSettings}
-              className="block w-full px-4 py-2 text-sm text-gray-700 text-justify hover:bg-gray-100"
-              role="menuitem"
-            >
-              Settings
-            </button>
-            <button
               onMouseDown={handleLogout}
               className="block w-full px-4 py-2 text-sm text-gray-700 text-justify hover:bg-gray-100"
               role="menuitem"
@@ -122,7 +111,7 @@ function RightMenu(props) {
     )
   } else {
     return (
-      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 tracking-wider">
+      <div className="static inset-y-0 right-0 flex items-center pr-2 sm:inset-auto sm:ml-6 sm:pr-0 tracking-wider">
         <Link to="/login">Signin</Link>
         <Link className="ml-6" to="/register">
           Signup

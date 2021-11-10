@@ -1,31 +1,34 @@
-import React, { useState } from "react";
-import Dropzone from "react-dropzone";
-import Axios from "axios";
-import { VIDEO_SERVER } from "../../Config";
+import React, { useState } from 'react';
+import Dropzone from 'react-dropzone';
+import Axios from 'axios';
+import { VIDEO_SERVER } from '../../Config';
 
 const privacyOptions = [
-  { value: false, label: "공개" },
-  { value: true, label: "비공개" },
+  { value: false, label: '공개' },
+  { value: true, label: '비공개' },
 ];
 
 const categoryOptions = [
-  { value: "멀티미디어", label: "멀티미디어" },
-  { value: "음악", label: "음악" },
-  { value: "미술", label: "미술" },
-  { value: "세미나", label: "세미나" },
+  { value: '멀티미디어', label: '멀티미디어' },
+  { value: '애니메이션', label: '애니메이션' },
+  { value: '음악', label: '음악' },
+  { value: '미술', label: '미술' },
+  { value: '교육', label: '교육' },
+  { value: '생활', label: '생활' },
+  { value: '음식', label: '음식' },
 ];
 
 // max file size (MB)
-const maxFileSize = 110;
+const maxFileSize = 10;
 
 function VideoUploadPage(props) {
   const user = props.user;
-  const [VideoTitle, setVideoTitle] = useState("");
-  const [Description, setDescription] = useState("");
+  const [VideoTitle, setVideoTitle] = useState('');
+  const [Description, setDescription] = useState('');
   const [Category, setCategory] = useState(categoryOptions[0].value);
-  const [FilePath, setFilePath] = useState("");
-  const [Duration, setDuration] = useState("");
-  const [ThumbnailPath, setThumbnailPath] = useState("");
+  const [FilePath, setFilePath] = useState('');
+  const [Duration, setDuration] = useState('');
+  const [ThumbnailPath, setThumbnailPath] = useState('');
   const [IsPrivate, setIsPrivate] = useState(false);
 
   const handleTitleChange = (e) => {
@@ -47,9 +50,9 @@ function VideoUploadPage(props) {
   const handleDrop = (files) => {
     let formData = new FormData();
     const config = {
-      header: { "content-type": "multipart/form-data" },
+      header: { 'content-type': 'multipart/form-data' },
     };
-    formData.append("file", files[0]);
+    formData.append('file', files[0]);
 
     Axios.post(`${VIDEO_SERVER}/uploadfiles`, formData, config)
       .then((response) => {
@@ -65,16 +68,17 @@ function VideoUploadPage(props) {
             if (response.data.success) {
               setDuration(response.data.fileDuration);
               setThumbnailPath(response.data.url);
+              console.log(response.data.url);
             } else {
-              alert("failed to create thumbnail");
+              alert('failed to create thumbnail');
             }
           });
         } else {
-          alert("failed to save the video in server.");
+          alert('failed to save the video in server.');
         }
       })
       .catch((error) => {
-        alert("failed to save the video in server.");
+        alert('failed to save the video in server.');
       });
   };
 
@@ -95,29 +99,27 @@ function VideoUploadPage(props) {
     Axios.post(`${VIDEO_SERVER}/uploadVideo`, variables)
       .then((response) => {
         if (response.data.success) {
-          alert("video uploaded!");
-          props.history.push("/");
+          alert('video uploaded!');
+          props.history.push('/');
         } else {
-          alert("Failed to upload video");
+          alert('Failed to upload video');
         }
       })
       .catch((error) => {
-        alert("error occured!");
+        alert('error occured!');
       });
   };
 
   return (
     <div className="max-w-sm mt-10">
-      <div className="">
-        <div className="px-4 sm:px-0">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Upload Video
-          </h3>
-          <p className="mt-1 text-sm text-gray-600">
-            This information will be displayed publicly so be careful what you
-            share.
-          </p>
-        </div>
+      <div className="px-4 sm:px-0">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Upload Video
+        </h3>
+        <p className="mt-1 text-sm text-gray-600">
+          This information will be displayed publicly so be careful what you
+          share.
+        </p>
       </div>
       <div className="mt-5">
         <form action="#" method="POST" onSubmit={handleSubmit}>
@@ -131,7 +133,7 @@ function VideoUploadPage(props) {
                   onDrop={handleDrop}
                   multiple={false}
                   maxSize={maxFileSize * 1000000} // Maximum file size (in bytes)
-                // acceptedFiles=".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF"
+                  // acceptedFiles=".jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF"
                 >
                   {({ getRootProps, getInputProps }) => (
                     <div

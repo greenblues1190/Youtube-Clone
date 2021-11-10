@@ -1,37 +1,13 @@
-import React from "react";
-import moment from "moment";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { registerUser } from "../../../_actions/user_actions";
-import { useDispatch } from "react-redux";
-
-import { Form, Input, Button } from "antd";
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
-};
+import React from 'react';
+import moment from 'moment';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { registerUser } from '../../../_actions/user_actions';
+import { useDispatch } from 'react-redux';
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
+
   return (
     <Formik
       initialValues={{
@@ -39,13 +15,11 @@ function RegisterPage(props) {
         lastName: '',
         name: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
       }}
       validationSchema={Yup.object().shape({
-        name: Yup.string()
-          .required('Name is required'),
-        lastName: Yup.string()
-          .required('Last Name is required'),
+        name: Yup.string().required('Name is required'),
+        lastName: Yup.string().required('Last Name is required'),
         email: Yup.string()
           .email('Email is invalid')
           .required('Email is required'),
@@ -54,32 +28,32 @@ function RegisterPage(props) {
           .required('Password is required'),
         confirmPassword: Yup.string()
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
-          .required('Confirm Password is required')
+          .required('Confirm Password is required'),
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
-
           let dataToSubmit = {
             email: values.email,
             password: values.password,
             name: values.name,
             lastname: values.lastname,
-            image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
+            image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`,
           };
 
-          dispatch(registerUser(dataToSubmit)).then(response => {
+          dispatch(registerUser(dataToSubmit)).then((response) => {
             if (response.payload.success) {
-              props.history.push("/login");
+              alert('회원가입이 완료되었습니다.');
+              props.history.push('/login');
             } else {
-              alert(response.payload.err.errmsg)
+              alert(response.payload.err.errmsg);
             }
-          })
+          });
 
           setSubmitting(false);
         }, 500);
       }}
     >
-      {props => {
+      {(props) => {
         const {
           values,
           touched,
@@ -92,102 +66,180 @@ function RegisterPage(props) {
           // handleReset,
         } = props;
         return (
-          <div className="app">
-            <h2>Sign up</h2>
-            <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit}>
+            <div className="max-w-sm mt-10">
+              <div className="px-4 sm:px-0">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  Registeration
+                </h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  By signing up, you agree to the{' '}
+                  <a
+                    className="no-underline border-b border-grey-dark text-grey-dark"
+                    href="https://www.law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%EB%94%94%EC%A7%80%ED%84%B8%EC%BD%98%ED%85%90%EC%B8%A0%20%EC%9D%B4%EC%9A%A9%20%ED%91%9C%EC%A4%80%EC%95%BD%EA%B4%80"
+                  >
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    className="no-underline border-b border-grey-dark text-grey-dark"
+                    href="https://www.privacy.go.kr/a3sc/per/inf/perInfStep01.do"
+                  >
+                    Privacy Policy
+                  </a>
+                </p>
+              </div>
+              <div className="my-5">
+                <div className="shadow sm:rounded-md sm:overflow-hidden">
+                  <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+                    <div>
+                      <label
+                        htmlFor="Name"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Name
+                        {errors.name && touched.name && (
+                          <span className="text-red-500 font-normal">
+                            {' '}
+                            {errors.name}
+                          </span>
+                        )}
+                      </label>
+                      <input
+                        id="name"
+                        type="text"
+                        value={values.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="First Name"
+                      />
+                    </div>
 
-              <Form.Item required label="Name">
-                <Input
-                  id="name"
-                  placeholder="Enter your name"
-                  type="text"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.name && touched.name ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.name && touched.name && (
-                  <div className="input-feedback">{errors.name}</div>
-                )}
-              </Form.Item>
+                    <div>
+                      <label
+                        htmlFor="Last Name"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Last Name
+                        {errors.lastName && touched.lastName && (
+                          <span className="text-red-500 font-normal">
+                            {' '}
+                            {errors.lastName}
+                          </span>
+                        )}
+                      </label>
+                      <input
+                        id="lastName"
+                        type="text"
+                        value={values.lastName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Last Name"
+                      />
+                    </div>
 
-              <Form.Item required label="Last Name">
-                <Input
-                  id="lastName"
-                  placeholder="Enter your Last Name"
-                  type="text"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.lastName && touched.lastName ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.lastName && touched.lastName && (
-                  <div className="input-feedback">{errors.lastName}</div>
-                )}
-              </Form.Item>
+                    <div>
+                      <label
+                        htmlFor="Email"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Email
+                        {errors.email && touched.email && (
+                          <span className="text-red-500 font-normal">
+                            {' '}
+                            {errors.email}
+                          </span>
+                        )}
+                      </label>
+                      <input
+                        id="email"
+                        type="text"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Email"
+                      />
+                    </div>
 
-              <Form.Item required label="Email" hasFeedback validateStatus={errors.email && touched.email ? "error" : 'success'}>
-                <Input
-                  id="email"
-                  placeholder="Enter your Email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.email && touched.email ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.email && touched.email && (
-                  <div className="input-feedback">{errors.email}</div>
-                )}
-              </Form.Item>
+                    <div>
+                      <label
+                        htmlFor="Password"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Password
+                        {errors.password && touched.password && (
+                          <span className="text-red-500 font-normal">
+                            {' '}
+                            {errors.password}
+                          </span>
+                        )}
+                      </label>
+                      <input
+                        id="password"
+                        type="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Password (6 characters and above)"
+                      />
+                    </div>
 
-              <Form.Item required label="Password" hasFeedback validateStatus={errors.password && touched.password ? "error" : 'success'}>
-                <Input
-                  id="password"
-                  placeholder="Enter your password"
-                  type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.password && touched.password ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.password && touched.password && (
-                  <div className="input-feedback">{errors.password}</div>
-                )}
-              </Form.Item>
+                    <div>
+                      <label
+                        htmlFor="Confirm Password"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Confirm Password
+                        {errors.confirmPassword && touched.confirmPassword && (
+                          <span className="text-red-500 font-normal">
+                            {' '}
+                            {errors.confirmPassword}
+                          </span>
+                        )}
+                      </label>
+                      <input
+                        id="confirmPassword"
+                        type="password"
+                        value={values.confirmPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                        placeholder="Confirm Password"
+                      />
+                    </div>
+                  </div>
 
-              <Form.Item required label="Confirm" hasFeedback>
-                <Input
-                  id="confirmPassword"
-                  placeholder="Enter your confirmPassword"
-                  type="password"
-                  value={values.confirmPassword}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.confirmPassword && touched.confirmPassword ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.confirmPassword && touched.confirmPassword && (
-                  <div className="input-feedback">{errors.confirmPassword}</div>
-                )}
-              </Form.Item>
+                  <div className="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-2">
+                    <button
+                      onClick={handleSubmit}
+                      type="primary"
+                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      disabled={isSubmitting}
+                    >
+                      Create Account
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-              <Form.Item {...tailFormItemLayout}>
-                <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          </div>
+              <div className="flex items-center justify-center">
+                <p className="mt-1 text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <a
+                    className="no-underline border-b border-blue text-blue"
+                    href="../login/"
+                  >
+                    Log in
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+          </form>
         );
       }}
     </Formik>

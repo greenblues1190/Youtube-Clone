@@ -1,35 +1,37 @@
-import React, { useEffect, useState } from "react";
-import Axios from "axios";
-import { VIDEO_SERVER } from "../../Config";
+import React, { useEffect, useState } from 'react';
+import Axios from 'axios';
+import { VIDEO_SERVER } from '../../Config';
 
 const privacyOptions = [
-  { value: false, label: "공개" },
-  { value: true, label: "비공개" },
+  { value: false, label: '공개' },
+  { value: true, label: '비공개' },
 ];
 
 const categoryOptions = [
-  { value: "멀티미디어", label: "멀티미디어" },
-  { value: "음악", label: "음악" },
-  { value: "미술", label: "미술" },
-  { value: "세미나", label: "세미나" },
+  { value: '멀티미디어', label: '멀티미디어' },
+  { value: '애니메이션', label: '애니메이션' },
+  { value: '음악', label: '음악' },
+  { value: '미술', label: '미술' },
+  { value: '교육', label: '교육' },
+  { value: '생활', label: '생활' },
+  { value: '음식', label: '음식' },
 ];
 
 function VideoEditPage(props) {
   const user = props.user;
   const videoId = props.match.params.videoId;
   const [WriterId, setWriterId] = useState('');
-  const [VideoTitle, setVideoTitle] = useState("");
-  const [Description, setDescription] = useState("");
+  const [VideoTitle, setVideoTitle] = useState('');
+  const [Description, setDescription] = useState('');
   const [Category, setCategory] = useState(categoryOptions[0].value);
   const [IsPrivate, setIsPrivate] = useState(false);
-  const [ThumbnailPath, setThumbnailPath] = useState("");
+  const [ThumbnailPath, setThumbnailPath] = useState('');
   const [Submitting, setSubmitting] = useState(false);
   const [IsDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
-
-    Axios.post(`${VIDEO_SERVER}/getVideoDetail`, { videoId: videoId })
-      .then(res => {
+    Axios.post(`${VIDEO_SERVER}/getVideoDetail`, { videoId: videoId }).then(
+      (res) => {
         if (res.data.success) {
           const videoDetail = res.data.videoDetail;
           setWriterId(videoDetail.writer._id);
@@ -40,10 +42,11 @@ function VideoEditPage(props) {
           setIsPrivate(videoDetail.isPrivate);
           setIsDeleted(videoDetail.IsDeleted);
         } else {
-          alert("비디오 정보를 가져오는데 실패했습니다.");
+          alert('비디오 정보를 가져오는데 실패했습니다.');
         }
-      })
-  }, [videoId])
+      },
+    );
+  }, [videoId]);
 
   const handleTitleChange = (e) => {
     setVideoTitle(e.currentTarget.value);
@@ -71,7 +74,7 @@ function VideoEditPage(props) {
         description: Description,
         isPrivate: IsPrivate,
         category: Category,
-      }
+      },
     };
 
     if (window.confirm('비디오 정보를 수정하시겠습니까?')) {
@@ -79,60 +82,57 @@ function VideoEditPage(props) {
       Axios.post(`${VIDEO_SERVER}/updateVideo`, variables)
         .then((response) => {
           if (response.data.success) {
-            alert("video updated!");
+            alert('video updated!');
             setSubmitting(false);
           } else {
-            alert("Failed to upload video");
+            alert('Failed to upload video');
           }
         })
         .catch((error) => {
-          alert("error occured!");
+          alert('error occured!');
           setSubmitting(false);
         });
     }
   };
 
   const handleDeleteClick = (e) => {
-    if (window.confirm('비디오를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-      Axios.post(`${VIDEO_SERVER}/deleteVideo`, { videoId: videoId })
-        .then((res) => {
+    if (
+      window.confirm('비디오를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')
+    ) {
+      Axios.post(`${VIDEO_SERVER}/deleteVideo`, { videoId: videoId }).then(
+        (res) => {
           setSubmitting(true);
           if (res.data.success) {
             setIsDeleted(true);
             setSubmitting(false);
             alert('비디오 삭제에 성공했습니다.');
-            props.history.push("/");
+            props.history.push('/');
           } else {
             setSubmitting(false);
             alert('비디오 삭제를 실패했습니다.');
           }
-        })
-    };
-  }
+        },
+      );
+    }
+  };
 
   // waiting to load data
   if (WriterId && user.userData) {
     if (IsDeleted) {
-      return (
-        <div className="">
-          Deleted Video
-        </div>
-      )
+      return <div className="">Deleted Video</div>;
     } else {
       // check authentication
       if (user.userData._id === WriterId) {
         return (
           <div className="max-w-sm mt-10">
-            <div className="">
-              <div className="px-4 sm:px-0">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Edit Video
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  This information will be displayed publicly so be careful what you
-                  share.
-                </p>
-              </div>
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Edit Video
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                This information will be displayed publicly so be careful what
+                you share.
+              </p>
             </div>
             <div className="mt-5">
               <form action="#" method="POST" onSubmit={handleSubmit}>
@@ -204,7 +204,11 @@ function VideoEditPage(props) {
                           className="mt-1 border p-2 w-full rounded-md shadow-sm"
                         >
                           {categoryOptions.map((item, index) => (
-                            <option key={index} value={item.value} selected={item.value === Category ? true : false}>
+                            <option
+                              key={index}
+                              value={item.value}
+                              selected={item.value === Category ? true : false}
+                            >
                               {item.label}
                             </option>
                           ))}
@@ -222,7 +226,11 @@ function VideoEditPage(props) {
                           className="mt-1 border p-2 w-full rounded-md shadow-sm"
                         >
                           {privacyOptions.map((item, index) => (
-                            <option key={index} value={item.value} selected={item.value === IsPrivate ? true : false}>
+                            <option
+                              key={index}
+                              value={item.value}
+                              selected={item.value === IsPrivate ? true : false}
+                            >
                               {item.label}
                             </option>
                           ))}
@@ -254,19 +262,11 @@ function VideoEditPage(props) {
           </div>
         );
       } else {
-        return (
-          <div>
-            forbidden
-          </div>
-        )
+        return <div>forbidden</div>;
       }
     }
   } else {
-    return (
-      <div>
-        loading...
-      </div>
-    )
+    return <div>loading...</div>;
   }
 }
 
